@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: linear-gradient(to right, #667eea, #764ba2); /* Gradient background */
+            color: #fff; /* White text color */
+        }
+        #container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            color: #333; /* Dark text color for the container */
+        }
+        h1 {
+            color: #5a67d8; /* Darker shade for the heading */
+        }
+        p {
+            color: #718096; /* Lighter text color for the paragraph */
+        }
+        input[type="number"] {
+            width: 200px;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5a67d8; /* Button color */
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for button */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Button shadow */
+        }
+        button:hover {
+            background-color: #4a5568; /* Darker button color on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        /* Additional styles for the retry button */
+        #retryBtn {
+            background-color: #ed8936; /* Different color for retry button */
+        }
+        #retryBtn:hover {
+            background-color: #dd6b20; /* Darker color on hover */
+        }
+
+        /* Media query for devices with a max width of 600px */
+        @media (max-width: 600px) {
+            #container {
+                width: 90%; /* Make the container wider on small screens */
+                padding: 10px;
+            }
+            input[type="number"] {
+                width: 80%; /* Make the input field wider on small screens */
+            }
+            button {
+                width: 40%; /* Make the buttons wider on small screens */
+                margin: 10px 0; /* Add some margin between buttons */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Guessing Game</h1>
+        <p>Guess a number between 1 and 100:</p>
+        <input type="number" id="guess" min="1" max="100" onkeydown="handleKeyDown(event)">
+        <button id="submitBtn" onclick="checkGuess()">Submit</button>
+        <button id="retryBtn" onclick="retry()" style="display: none;">Retry</button>
+        <p id="message"></p>
+    </div>
+    <script>
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the default action (form submission)
+                checkGuess();
+            }
+        }
+
+        function checkGuess() {
+            let userGuess = document.getElementById('guess').value;
+            attempts++;
+            let messageElement = document.getElementById('message');
+            let guessInput = document.getElementById('guess');
+            let submitBtn = document.getElementById('submitBtn');
+
+            if (userGuess == secretNumber) {
+                messageElement.textContent = `Congratulations! You guessed the right number in ${attempts} attempts!`;
+                disableInputs();
+            } else {
+                let difference = Math.abs(userGuess - secretNumber);
+                if (difference < 5) {
+                    messageElement.textContent = 'Very close! Try again.';
+                } else if (difference < 10) {
+                    messageElement.textContent = 'Close! Try again.';
+                } else if (userGuess < secretNumber) {
+                    messageElement.textContent = 'Too low! Try again.';
+                } else if (userGuess > secretNumber) {
+                    messageElement.textContent = 'Too high! Try again.';
+                }
+
+                if (attempts >= maxAttempts) {
+                    messageElement.textContent = `You've reached the maximum number of attempts. The number was ${secretNumber}.`;
+                    disableInputs();
+                }
+            }
+
+            // Clear the input box for the next guess
+            guessInput.value = '';
+        }
+
+        function disableInputs() {
+            let guessInput = document.getElementById('guess');
+            let submitBtn = document.getElementById('submitBtn');
+            guessInput.disabled = true;
+            submitBtn.disabled = true;
+            guessInput.classList.add('disabled');
+            submitBtn.classList.add('disabled');
+            document.getElementById('retryBtn').style.display = 'inline-block'; // Show retry button
+        }
+
+        function retry() {
+            // Reset game state
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            let guessInput = document.getElementById('guess');
+            let submitBtn = document.getElementById('submitBtn');
+            let messageElement = document.getElementById('message');
+            guessInput.disabled = false;
+            submitBtn.disabled = false;
+            guessInput.classList.remove('disabled');
+            submitBtn.classList.remove('disabled');
+            messageElement.textContent = '';
+            document.getElementById('retryBtn').style.display = 'none'; // Hide retry button
+            guessInput.focus(); // Focus on the input box
+        }
+    </script>
+</body>
+</html>
