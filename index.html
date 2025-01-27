@@ -7,17 +7,19 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            display: flex; /* Use Flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 100vh; /* Full viewport height */
             background: linear-gradient(to right, #667eea, #764ba2); /* Gradient background */
             color: #fff; /* White text color */
+            margin: 0; /* Remove default margin */
         }
         #container {
             background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: inline-block;
             color: #333; /* Dark text color for the container */
         }
         h1 {
